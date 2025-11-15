@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 
 export default function BackButton({
   handleClick,
-  disabled,
+  //disabled,
   className,
 }: {
   handleClick?: () => void;

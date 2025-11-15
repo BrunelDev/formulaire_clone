@@ -238,7 +238,14 @@ const fetchDesignation = async (): Promise<
     );
 
     return new Promise((resolve, reject) => {
-      const res: Record<string, any> = {};
+      const res: Record<
+        string,
+        {
+          designation: string;
+          pu?: number | undefined;
+          tva?: number | undefined;
+        }
+      > = {};
 
       base("Texte in devis")
         .select({ view: "Grid view" })
@@ -271,7 +278,7 @@ const fetchDesignation = async (): Promise<
 
 export const genreratePermisDevis = async (data: Data) => {
   const designationsMapping = await fetchDesignation();
-  console.log("===designation====",designationsMapping);
+  console.log("===designation====", designationsMapping);
   const payload: DevisRecord[] = [
     {
       designation: designationsMapping.isArchitectNeeded.designation,

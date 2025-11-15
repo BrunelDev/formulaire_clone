@@ -196,7 +196,7 @@ export const StatisticsSection = () => {
       let devis: DevisRecord[] = [];
       let htmlContent;
       if (formData.isArchitectNeeded) {
-        devis = generateResume(formData);
+        devis = await generateResume(formData);
 
         htmlContent = generateResumePdf(
           devis,
