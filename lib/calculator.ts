@@ -254,8 +254,8 @@ const fetchDesignation = async (): Promise<
             records.forEach((record) => {
               res[record.get("Référence") as string] = {
                 designation: record.get("Désignation") as string,
-                pu: record.get("PU") as number,
-                tva: record.get("TVA") as number,
+                pu: record.get("P.V HT") as number,
+                tva: record.get("P.A HT") as number,
               };
             });
 
