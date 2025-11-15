@@ -247,7 +247,7 @@ const fetchDesignation = async (): Promise<
         }
       > = {};
 
-      base("Imported table")
+      base("Texte in devis")
         .select({ view: "Grid view" })
         .eachPage(
           (records, fetchNextPage) => {
