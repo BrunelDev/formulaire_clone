@@ -227,25 +227,25 @@ export const StatisticsSection = () => {
       } else {
         switch (formData.option) {
           case Option.DECLARATION_PREALABLE:
-            devis = generateDpDevis(formData);
+            devis = await generateDpDevis(formData);
             break;
           case Option.PLAN_UNITE:
-            devis = generateUniteDevis(formData);
+            devis = await generateUniteDevis(formData);
             break;
           case Option.DOSSIER_ERP:
-            devis = generateErpDevis(formData);
+            devis = await generateErpDevis(formData);
             break;
           case Option.CERTIFICAT_URBANISME:
-            devis = generateUrbanismFormDevis(formData);
+            devis = await generateUrbanismFormDevis(formData);
             break;
           case Option.PERMIS_CONSTRUIRE:
-            devis = genreratePermisDevis(formData);
+            devis = await genreratePermisDevis(formData);
             break;
           case Option.ETUDE_RE2020:
-            devis = generateRe2020Devis();
+            devis = await generateRe2020Devis();
             break;
           case Option.ETUDE_SISMIQUE:
-            devis = generateSismicDevis();
+            devis = await generateSismicDevis();
             break;
         }
         htmlContent = generateDevisPdf(devis, client);
@@ -265,9 +265,9 @@ export const StatisticsSection = () => {
 
         // Télécharger le PDF
         const blob = await response.blob();
-        // const url = window.URL.createObjectURL(blob);
-        // const a = document.createElement("a");
-        // a.href = url;
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
         const dataToSend = new FormData();
         dataToSend.append("pdf", blob, `devis-${devisData.NUM_DEVIS}.pdf`);
         dataToSend.append(
@@ -281,10 +281,10 @@ export const StatisticsSection = () => {
           })
         );
 
-        await fetch(urlToSendData, {
-          method: "POST",
-          body: dataToSend,
-        });
+        // await fetch(urlToSendData, {
+        //   method: "POST",
+        //   body: dataToSend,
+        // });
         // await fetch(urlToSendPdf, {
         //   method: "POST",
         //   headers: {
@@ -293,25 +293,25 @@ export const StatisticsSection = () => {
         //   body: blob,
         // });
 
-        // a.download = `devis-${devisData.NUM_DEVIS}.pdf`;
-        // document.body.appendChild(a);
-        // a.click();
-        // window.URL.revokeObjectURL(url);
-        // document.body.removeChild(a);
+        a.download = `devis-${devisData.NUM_DEVIS}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
       } else {
-        await fetch(urlToSendData, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            clientLastName: nom,
-            clientFirstName: prenom,
-            clientEmail: email,
-            clientPhone: telephone,
-          }),
-        });
+        // await fetch(urlToSendData, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     ...formData,
+        //     clientLastName: nom,
+        //     clientFirstName: prenom,
+        //     clientEmail: email,
+        //     clientPhone: telephone,
+        //   }),
+        // });
       }
     } catch (error) {
       console.error("Erreur:", error);
@@ -375,9 +375,9 @@ export const StatisticsSection = () => {
           (formData.option === Option.PERMIS_CONSTRUIRE ||
             formData.option === Option.DOSSIER_ERP))
       ) {
-        router.push("/finalisation/personnel");
+        //router.push("/finalisation/personnel");
       } else {
-        router.push("/finalisation/devis");
+        //router.push("/finalisation/devis");
       }
     } catch (error) {
       console.error("Erreur réseau lors de l'envoi au webhook", error);
@@ -507,7 +507,6 @@ export const StatisticsSection = () => {
                             }}
                             containerStyle={{
                               width: "100%",
-                              
                             }}
                             buttonStyle={{
                               border: "1px solid #6d7074",

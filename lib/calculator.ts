@@ -1,3 +1,6 @@
+"use server";
+import Airtable from "airtable";
+
 interface Data {
   isArchitectNeeded?: boolean;
   hasMultipleRealizationsOnSameConstructionPermit?: boolean;
@@ -29,7 +32,7 @@ export interface DevisRecord {
   quantity?: number;
   pu?: number;
   tva?: number;
-  totalht?: number
+  totalht?: number;
 }
 
 const designationsMapping: Record<
@@ -219,7 +222,56 @@ Le donneur d'ordre est tenu de fournir toutes informations techniques permettant
   },
 };
 
-export const genreratePermisDevis = (data: Data) => {
+const fetchDesignation = async (): Promise<
+  Record<
+    string,
+    {
+      designation: string;
+      pu?: number;
+      tva?: number;
+    }
+  >
+> => {
+  try {
+    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_TOKEN }).base(
+      "appIqaoe6YNiflxLh"
+    );
+
+    return new Promise((resolve, reject) => {
+      const res: Record<string, any> = {};
+
+      base("Texte in devis")
+        .select({ view: "Grid view" })
+        .eachPage(
+          (records, fetchNextPage) => {
+            records.forEach((record) => {
+              res[record.get("Référence") as string] = {
+                designation: record.get("Désignation") as string,
+                pu: record.get("PU") as number,
+                tva: record.get("TVA") as number,
+              };
+            });
+
+            fetchNextPage();
+          },
+          (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(res);
+            }
+          }
+        );
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données :", error);
+    throw error;
+  }
+};
+
+export const genreratePermisDevis = async (data: Data) => {
+  const designationsMapping = await fetchDesignation();
+  console.log("===designation====",designationsMapping);
   const payload: DevisRecord[] = [
     {
       designation: designationsMapping.isArchitectNeeded.designation,
@@ -335,7 +387,7 @@ export const genreratePermisDevis = (data: Data) => {
   return payload;
 };
 
-export const generateResume = (data: Data): DevisRecord[] => {
+export const generateResume = async (data: Data): Promise<DevisRecord[]> => {
   const simpleDesignations = {
     isArchitectNeeded: {
       designation: "Services d'architecte",
@@ -414,7 +466,7 @@ export const generateResume = (data: Data): DevisRecord[] => {
   return payload;
 };
 
-export const generateDpDevis = (data: Data) => {
+export const generateDpDevis = async (data: Data) => {
   const payload: DevisRecord[] = [
     {
       designation: designationsMapping.dpDevis.designation,
@@ -497,7 +549,7 @@ export const generateDpDevis = (data: Data) => {
   return payload;
 };
 
-export const generateUniteDevis = (data: Data) => {
+export const generateUniteDevis = async (data: Data) => {
   const payload: DevisRecord[] = [];
 
   if (data.hasMultipleRealizationsOnSamePlanRequest) {
@@ -570,7 +622,7 @@ export const generateUniteDevis = (data: Data) => {
   return payload;
 };
 
-export const generateErpDevis = (data: Data) => {
+export const generateErpDevis = async (data: Data) => {
   const payload: DevisRecord[] = [
     {
       designation: designationsMapping.erpDevis.designation,
@@ -606,7 +658,7 @@ export const generateErpDevis = (data: Data) => {
   return payload;
 };
 
-export const generateUrbanismFormDevis = (data: Data) => {
+export const generateUrbanismFormDevis = async (data: Data) => {
   const payload: DevisRecord[] = [
     {
       designation: designationsMapping.urbanismDevis.designation,
@@ -655,7 +707,7 @@ export const generateUrbanismFormDevis = (data: Data) => {
   return payload;
 };
 
-export const generateRe2020Devis = () => {
+export const generateRe2020Devis = async () => {
   const mapping = designationsMapping.bbioStudy;
   const payload: DevisRecord[] = [
     {
@@ -669,7 +721,7 @@ export const generateRe2020Devis = () => {
   return payload;
 };
 
-export const generateSismicDevis = () => {
+export const generateSismicDevis = async () => {
   const mapping = designationsMapping.seismicStudy;
   const payload: DevisRecord[] = [
     {
