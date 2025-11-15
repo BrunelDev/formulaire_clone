@@ -202,7 +202,7 @@ Plans envoyés:<br>
 -Plan de masse<br>
 -Plan de façades<br>
 <br>
-(les plans de niveaux seront intégrés au C.U)`,
+(les plans de niveaux seront intégrés au C.U) `,
     pu: 290 / 1.2,
     tva: 20,
   },
