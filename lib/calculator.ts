@@ -247,15 +247,18 @@ const fetchDesignation = async (): Promise<
         }
       > = {};
 
-      base("Texte in devis")
+      base("Imported table")
         .select({ view: "Grid view" })
         .eachPage(
           (records, fetchNextPage) => {
             records.forEach((record) => {
-              res[record.get("Référence") as string] = {
-                designation: record.get("Désignation") as string,
-                pu: record.get("P.V HT") as number,
-                tva: record.get("Tva") as number,
+              res[record.get("clé") as string] = {
+                designation: (record
+                  .get("désignation")
+                  ?.toString()
+                  .replaceAll("\n", "<br>") ?? "") as string,
+                pu: record.get("Prix Unitaire HT") as number,
+                tva: record.get("TVA") as number,
               };
             });
 
