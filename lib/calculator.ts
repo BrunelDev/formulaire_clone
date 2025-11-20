@@ -398,6 +398,7 @@ export const genreratePermisDevis = async (data: Data) => {
 };
 
 export const generateResume = async (data: Data): Promise<DevisRecord[]> => {
+  
   const simpleDesignations = {
     isArchitectNeeded: {
       designation: "Services d'architecte",
@@ -477,6 +478,8 @@ export const generateResume = async (data: Data): Promise<DevisRecord[]> => {
 };
 
 export const generateDpDevis = async (data: Data) => {
+  const designationsMapping = await fetchDesignation();
+
   const payload: DevisRecord[] = [
     {
       designation: designationsMapping.dpDevis.designation,
@@ -561,6 +564,8 @@ export const generateDpDevis = async (data: Data) => {
 
 export const generateUniteDevis = async (data: Data) => {
   const payload: DevisRecord[] = [];
+  const designationsMapping = await fetchDesignation();
+
 
   if (data.hasMultipleRealizationsOnSamePlanRequest) {
     const mapping =
@@ -633,6 +638,8 @@ export const generateUniteDevis = async (data: Data) => {
 };
 
 export const generateErpDevis = async (data: Data) => {
+  const designationsMapping = await fetchDesignation();
+
   const payload: DevisRecord[] = [
     {
       designation: designationsMapping.erpDevis.designation,
@@ -669,6 +676,8 @@ export const generateErpDevis = async (data: Data) => {
 };
 
 export const generateUrbanismFormDevis = async (data: Data) => {
+  const designationsMapping = await fetchDesignation();
+
   const payload: DevisRecord[] = [
     {
       designation: designationsMapping.urbanismDevis.designation,
@@ -718,6 +727,8 @@ export const generateUrbanismFormDevis = async (data: Data) => {
 };
 
 export const generateRe2020Devis = async () => {
+  const designationsMapping = await fetchDesignation();
+
   const mapping = designationsMapping.bbioStudy;
   const payload: DevisRecord[] = [
     {
@@ -732,6 +743,8 @@ export const generateRe2020Devis = async () => {
 };
 
 export const generateSismicDevis = async () => {
+  const designationsMapping = await fetchDesignation();
+
   const mapping = designationsMapping.seismicStudy;
   const payload: DevisRecord[] = [
     {
